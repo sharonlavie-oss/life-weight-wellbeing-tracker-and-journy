@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>מעקב משקל ורווחה</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-shape bg-shape-a"></div>
+  <div class="bg-shape bg-shape-b"></div>
+
+  <div class="app-shell">
+    <header class="topbar card-glass">
+      <div>
+        <h1>יומן משקל, הרגלים ורווחה</h1>
+        <p>מרחב אישי נעים למעקב יומי פשוט, רגוע ומדויק</p>
+      </div>
+      <div class="topbar-tag">גרסה אישית · RTL</div>
+    </header>
+
+    <nav class="main-nav" aria-label="ניווט ראשי">
+      <button data-screen="dashboard" class="nav-btn active">דשבורד</button>
+      <button data-screen="morning" class="nav-btn">צ'ק-אין בוקר</button>
+      <button data-screen="evening" class="nav-btn">צ'ק-אין ערב</button>
+      <button data-screen="analysis" class="nav-btn">ניתוח שבועי/חודשי</button>
+      <button data-screen="nutrition" class="nav-btn">צ'אט תזונה</button>
+      <button data-screen="wellbeing" class="nav-btn">צ'אט רווחה</button>
+    </nav>
+
+    <main id="screens">
+      <section id="dashboard" class="screen active">
+        <h2>דשבורד ראשי</h2>
+        <div class="grid-2">
+          <article class="card elevated">
+            <div class="section-head">
+              <h3>גרף משקל · 30 ימים אחרונים</h3>
+              <span class="chip">מעקב יומי</span>
+            </div>
+            <canvas id="weightChart" width="600" height="260" aria-label="גרף משקל"></canvas>
+          </article>
+          <article class="card elevated">
+            <div class="section-head">
+              <h3>השלמת הרגלים שבועית</h3>
+              <span class="chip">7 ימים</span>
+            </div>
+            <div class="kpi-wrap">
+              <div class="kpi">
+                <span id="weeklyHabitsPercent">0%</span>
+              </div>
+              <div class="progress-track"><div id="weeklyProgressBar" class="progress-bar"></div></div>
+            </div>
+            <p id="weeklyHabitsText" class="muted">אין מספיק נתונים עדיין.</p>
+          </article>
+        </div>
+
+        <article class="card quick-links elevated">
+          <h3>גישה מהירה</h3>
+          <div class="quick-link-row">
+            <button data-screen="morning" class="secondary-link">מעבר לצ'ק-אין בוקר</button>
+            <button data-screen="evening" class="secondary-link">מעבר לצ'ק-אין ערב</button>
+            <button data-screen="analysis" class="secondary-link">מעבר לניתוח</button>
+            <button data-screen="nutrition" class="secondary-link">מעבר לצ'אט תזונה</button>
+            <button data-screen="wellbeing" class="secondary-link">מעבר לצ'אט רווחה</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="morning" class="screen">
+        <h2>צ'ק-אין בוקר</h2>
+        <form id="morningForm" class="card form-layout elevated">
+          <label>משקל (בק"ג)
+            <input type="number" step="0.1" min="20" max="300" name="weight" required />
+          </label>
+
+          <div class="toggle-row">
+            <span>שתיתי כוס מים אחת?</span>
+            <input type="hidden" name="waterGlass" value="no" />
+            <button type="button" class="habit-toggle" data-target="waterGlass" aria-pressed="false">כן</button>
+          </div>
+
+          <div class="toggle-row">
+            <span>עשיתי הליכה קצרה?</span>
+            <input type="hidden" name="shortWalk" value="no" />
+            <button type="button" class="habit-toggle" data-target="shortWalk" aria-pressed="false">כן</button>
+          </div>
+
+          <label>דירוג שינה (0-10)
+            <input type="range" name="sleep" min="0" max="10" value="5" />
+            <span class="range-value" data-for="sleep">5</span>
+          </label>
+          <label>דירוג אנרגיה (0-10)
+            <input type="range" name="energy" min="0" max="10" value="5" />
+            <span class="range-value" data-for="energy">5</span>
+          </label>
+          <label>דירוג מצב רוח (0-10)
+            <input type="range" name="mood" min="0" max="10" value="5" />
+            <span class="range-value" data-for="mood">5</span>
+          </label>
+          <label>הקשר חריג או נסיבות מיוחדות להיום
+            <textarea name="context" rows="3" placeholder="מה חשוב לזכור על היום הזה?"></textarea>
+          </label>
+          <button type="submit" class="primary">שמירה</button>
+        </form>
+        <article id="morningFeedback" class="card hidden"></article>
+      </section>
+
+      <section id="evening" class="screen">
+        <h2>צ'ק-אין ערב</h2>
+        <form id="eveningForm" class="card form-layout elevated">
+          <div class="toggle-row">
+            <span>שתיתי 1.5 ליטר מים?</span>
+            <input type="hidden" name="water15" value="no" />
+            <button type="button" class="habit-toggle" data-target="water15" aria-pressed="false">כן</button>
+          </div>
+
+          <div class="toggle-row">
+            <span>הלכתי 6000 צעדים?</span>
+            <input type="hidden" name="steps6000" value="no" />
+            <button type="button" class="habit-toggle" data-target="steps6000" aria-pressed="false">כן</button>
+          </div>
+
+          <div class="toggle-row">
+            <span>נמנעתי מקמח וסוכר?</span>
+            <input type="hidden" name="avoidFlourSugar" value="no" />
+            <button type="button" class="habit-toggle" data-target="avoidFlourSugar" aria-pressed="false">כן</button>
+          </div>
+
+          <div class="toggle-row">
+            <span>השלמתי את משימות היום?</span>
+            <input type="hidden" name="tasksDone" value="no" />
+            <button type="button" class="habit-toggle" data-target="tasksDone" aria-pressed="false">כן</button>
+          </div>
+
+          <div class="toggle-row">
+            <span>הגדרתי משימות למחר?</span>
+            <input type="hidden" name="tasksTomorrow" value="no" />
+            <button type="button" class="habit-toggle" data-target="tasksTomorrow" aria-pressed="false">כן</button>
+          </div>
+
+          <label>הקשר חריג או נסיבות מיוחדות
+            <textarea name="context" rows="3" placeholder="מה השפיע על היום שלך?"></textarea>
+          </label>
+          <button type="submit" class="primary">שמירה</button>
+        </form>
+        <article id="eveningFeedback" class="card hidden"></article>
+      </section>
+
+      <section id="analysis" class="screen">
+        <h2>ניתוח שבועי/חודשי</h2>
+        <div class="grid-2">
+          <article class="card elevated"><h3>מגמת משקל</h3><p id="weightTrend">אין מספיק נתונים.</p></article>
+          <article class="card elevated"><h3>ממוצע מצב רוח</h3><p id="avgMood">-</p></article>
+          <article class="card elevated"><h3>ממוצע אנרגיה</h3><p id="avgEnergy">-</p></article>
+          <article class="card elevated"><h3>ממוצע שינה</h3><p id="avgSleep">-</p></article>
+          <article class="card elevated"><h3>אחוז השלמת הרגלים</h3><p id="analysisHabits">-</p></article>
+          <article class="card elevated"><h3>סיכום אוטומטי</h3><p id="autoSummary">נתחיל לצבור מידע ונציג מגמות ברורות.</p></article>
+        </div>
+      </section>
+
+      <section id="nutrition" class="screen">
+        <h2>צ'אט תזונה</h2>
+        <article class="card elevated">
+          <form id="nutritionIntro" class="form-layout">
+            <label>מה המטרה התזונתית העיקרית שלך השבוע?
+              <input type="text" name="goal" placeholder="למשל: להפחית נשנושים בערב" required />
+            </label>
+            <label>מה האתגר הכי גדול כרגע?
+              <input type="text" name="challenge" placeholder="למשל: רעב בין ארוחות" required />
+            </label>
+            <button type="submit" class="primary">התחל צ'אט</button>
+          </form>
+        </article>
+        <article class="card chat-box hidden elevated" id="nutritionChatWrap">
+          <div id="nutritionChat" class="chat-log"></div>
+          <form id="nutritionChatForm" class="chat-input">
+            <input name="message" type="text" placeholder="כתוב/כתבי שאלה על תזונה" required />
+            <button type="submit" class="primary">שליחה</button>
+          </form>
+        </article>
+      </section>
+
+      <section id="wellbeing" class="screen">
+        <h2>צ'אט רווחה</h2>
+        <article class="card elevated">
+          <label>בחירת סגנון תמיכה
+            <select id="supportStyle">
+              <option value="ACT">ACT</option>
+              <option value="IFS">IFS</option>
+              <option value="GENERAL">תמיכה כללית</option>
+            </select>
+          </label>
+          <button id="startWellbeing" class="primary">התחל שיחה</button>
+        </article>
+        <article class="card chat-box hidden elevated" id="wellbeingChatWrap">
+          <div id="wellbeingChat" class="chat-log"></div>
+          <form id="wellbeingChatForm" class="chat-input">
+            <input name="message" type="text" placeholder="שתף/י מה עובר עליך" required />
+            <button type="submit" class="primary">שליחה</button>
+          </form>
+          <button id="endConversation" class="danger">סיום שיחה</button>
+          <p id="conversationSaved" class="muted"></p>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <button id="floatingChatBtn" class="floating-chat" type="button" aria-label="פתיחת צ'אט רווחה">
+    <span class="chat-icon">💬</span>
+    <span>צ'אט</span>
+  </button>
+
+  <script src="app.js"></script>
+</body>
+</html>
